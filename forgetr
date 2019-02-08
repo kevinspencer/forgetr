@@ -21,11 +21,11 @@ use Twitter::API::Util 'is_twitter_api_error';
 use strict;
 use warnings;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 $Data::Dumper::Indent = 1;
 
 my $twitter_user = shift || 'kevin_spencer';
-my $tokens_file = File::Spec->catfile(File::HomeDir->my_home(), '.twitter_tokens');
+my $tokens_file = File::Spec->catfile(File::HomeDir->my_home(), '.forgetr.tokens');
 
 #
 # consumer_key and consumer_secret are provided by twitter on app registration.
@@ -36,8 +36,8 @@ my $tokens_file = File::Spec->catfile(File::HomeDir->my_home(), '.twitter_tokens
 # http://arstechnica.com/security/2010/09/twitter-a-case-study-on-how-to-do-oauth-wrong/
 #
 
-my $consumer_key    = 'deVbUDBadJHQn3dNsnqsA';
-my $consumer_secret = 'ZQVMbIvkGjf9mlyP2BfDzHWTtyj7NoBrUHMTqLfTzoI';
+my $consumer_key    = 'iXzcdUG8kVN0AswhxTheu602r';
+my $consumer_secret = 'SEaxg9uawhdV25J2NPfwQg4q3cSG5knAb8amGzrIvh21rWoVsW';
 
 my $client = Twitter::API->new_with_traits(
     traits              => [ qw/Migration ApiMethods RetryOnError/ ],
@@ -88,9 +88,7 @@ eval {
         last if (! @$tweets);
         for my $tweet (@$tweets) {
             print Dumper $tweet;
-            #if ($tweet->{text} =~ /http.*?:/) {
-            #    print $tweet->{text}, "\n";
-            #}
+            exit();
             $max_id = $tweet->{id};
         }
     }
