@@ -21,7 +21,7 @@ use Twitter::API::Util 'is_twitter_api_error';
 use strict;
 use warnings;
 
-our $VERSION = '0.2';
+our $VERSION = '0.3';
 $Data::Dumper::Indent = 1;
 
 my $twitter_user = shift || 'kevin_spencer';
@@ -81,7 +81,7 @@ try {
 #
 my $max_id = 0;
 my $args = { screen_name => $twitter_user, count => 50 };
-eval {
+try {
     while(1) {
         $args->{max_id} = ($max_id - 1) if $max_id;
         my $tweets = $client->user_timeline($args);
@@ -92,11 +92,9 @@ eval {
             $max_id = $tweet->{id};
         }
     }
+} catch {
+    die "Twitter error: " . $_ . "\n";
 };
-
-if (my $err = $@) {
-    die "Twitter error: ", $err->error(), "\n";
-}
 
 sub get_twitter_authorization {
     my $request = $client->oauth_request_token();
@@ -127,8 +125,7 @@ sub get_twitter_authorization {
             print "Twitter error: did not receive access tokens.\n";
             return;
         }
-    }
-    catch {
+    } catch {
         die $_ unless is_twitter_api_error($_);
 
         print $_->http_request->as_string;
